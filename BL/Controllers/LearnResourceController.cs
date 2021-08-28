@@ -35,6 +35,9 @@ namespace BL.Controllers
 
             var learnResourceModel = await _context.LearnResourceModel
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            learnResourceModel.Comments = _context.CommentModel.Where(c => c.LearnResourceId == id).ToList();
+
             if (learnResourceModel == null)
             {
                 return NotFound();
@@ -79,6 +82,27 @@ namespace BL.Controllers
                 return NotFound();
             }
             return View(learnResourceModel);
+        }
+
+        public IActionResult AddComment(int id)
+        {
+            return View(new CommentModel() { LearnResourceId = id });
+        }
+
+        public async Task<IActionResult> SaveComment([Bind("LearnResourceId, CommentText, Username")] CommentModel commentModel)
+        {
+            var newComment = commentModel;
+            newComment.CommentDate = DateTime.Now;
+            newComment.Status = CommentStatus.Approved;
+
+            var learnResourceModel = await _context.LearnResourceModel.FindAsync(commentModel.LearnResourceId);
+            learnResourceModel.Comments = _context.CommentModel.Where(c => c.Id == commentModel.LearnResourceId).ToList();
+            learnResourceModel.Comments.Add(newComment);
+
+            _context.Update(learnResourceModel);
+            await _context.SaveChangesAsync();
+
+            return View("Details");
         }
 
         // POST: LearnResource/Edit/5
