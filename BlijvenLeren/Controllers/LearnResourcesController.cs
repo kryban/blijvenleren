@@ -7,46 +7,41 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BlijvenLeren.Data;
 using BlijvenLeren.Models;
+using BlijvenLeren.Repository;
 
 namespace BlijvenLeren.Controllers
 {
     public class LearnResourcesController : Controller
     {
         private readonly BlijvenLerenContext _context;
+        private readonly IBlijvenLerenRepository _repo;
 
-        public LearnResourcesController(BlijvenLerenContext context)
+        public LearnResourcesController(BlijvenLerenContext context, IBlijvenLerenRepository repo)
         {
             _context = context;
+            _repo = repo;
         }
 
         // GET: LearnResources
         public async Task<IActionResult> Index()
         {
-            return View(await _context.LearnResource.ToListAsync());
+            return View(await _repo.GetAllLearnResources()); // View(await _context.LearnResource.ToListAsync());
         }
 
         // GET: LearnResources/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            var vm = new LearnResourcesViewModel();
-
             if (id == null)
             {
                 return NotFound();
             }
 
-            vm.LearnResource = await _context.LearnResource
-                .FirstOrDefaultAsync(m => m.LearnResourceId == id);
+            LearnResourcesViewModel vm = _repo.GetLearnResourceDetails((int)id).Result;
 
             if (vm.LearnResource == null)
             {
                 return NotFound();
             }
-
-            vm.Comments = _context.Comment.Where(m => m.LearnResourceId == id).ToList();
-
-            //var learnResource = await _context.LearnResource
-            //    .FirstOrDefaultAsync(m => m.LearnResourceId == id);
             
             return View(vm);
         }
@@ -66,28 +61,23 @@ namespace BlijvenLeren.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(learnResource);
-                await _context.SaveChangesAsync();
+                await _repo.AddLearnResource(learnResource);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(learnResource);
         }
 
-        public IActionResult AddComment(int id)
+        public IActionResult NewComment(int id)
         {
             return View(new Comment() { LearnResourceId = id });
         }
 
-        public async Task<IActionResult> SaveComment([Bind("LearnResourceId, CommentText, Username")] Comment commentModel)
+        public async Task<IActionResult> AddComment([Bind("LearnResourceId, CommentText, Username")] Comment newComment)
         {
-            var newComment = commentModel;
-            newComment.CommentDate = DateTime.Now;
-            newComment.Status = CommentStatus.Approved;
+            await _repo.AddComment(newComment);
 
-            _context.Comment.Add(newComment); 
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Details", new { id = commentModel.LearnResourceId });
+            return RedirectToAction("Details", new { id = newComment.LearnResourceId });
         }
 
         // GET: LearnResources/Edit/5
@@ -122,12 +112,11 @@ namespace BlijvenLeren.Controllers
             {
                 try
                 {
-                    _context.Update(learnResource);
-                    await _context.SaveChangesAsync();
+                    await _repo.UpdateLearnResource(learnResource);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LearnResourceExists(learnResource.LearnResourceId))
+                    if (!_repo.LearnResourceExists(learnResource.LearnResourceId))
                     {
                         return NotFound();
                     }
@@ -149,8 +138,8 @@ namespace BlijvenLeren.Controllers
                 return NotFound();
             }
 
-            var learnResource = await _context.LearnResource
-                .FirstOrDefaultAsync(m => m.LearnResourceId == id);
+            var learnResource = await _repo.GetLearnResource((int)id);
+
             if (learnResource == null)
             {
                 return NotFound();
@@ -164,15 +153,9 @@ namespace BlijvenLeren.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var learnResource = await _context.LearnResource.FindAsync(id);
-            _context.LearnResource.Remove(learnResource);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            await _repo.DeleteLearnResource(id);
 
-        private bool LearnResourceExists(int id)
-        {
-            return _context.LearnResource.Any(e => e.LearnResourceId == id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
