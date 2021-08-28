@@ -1,0 +1,50 @@
+﻿@model BlijvenLeren.Models.LearnResourcesViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>LearnResource</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LearnResource.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LearnResource.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LearnResource.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LearnResource.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LearnResource.Link)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LearnResource.Link)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <p><h6>Comments</h6></p>
+</div>
+@foreach (var comment in Model.Comments.OrderByDescending(c => c.CommentDate))
+{
+    <div>@comment.CommentText</div>
+    <div><i><small>@comment.CommentDate</small> </i></div>
+    <div>&nbsp;</div>
+}
+
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.LearnResource.LearnResourceId">Edit</a> |
+    <a asp-action="Index">Back to List</a> |
+    <a asp-action="AddComment" asp-route-id="@Model.LearnResource.LearnResourceId">Add Comment</a> |
+</div>
