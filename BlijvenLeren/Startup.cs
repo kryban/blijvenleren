@@ -26,6 +26,8 @@ namespace BlijvenLeren
         {
             services.AddControllersWithViews();
 
+            var connString = Configuration.GetConnectionString("BlijvenLerenContext");
+
             services.AddDbContext<BlijvenLerenContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("BlijvenLerenContext")));
         }
