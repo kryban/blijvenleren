@@ -5,7 +5,6 @@ on:
     - Repository
 env:
   AZURE_WEBAPP_NAME: blijvenlerenon
-  AZURE_WEBAPP_SLOT_NAME: dev
   AZURE_WEBAPP_PACKAGE_PATH: BlijvenLeren/publish
   AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.blijvenlerenon_dev_d8a3 }}
   CONFIGURATION: Release
