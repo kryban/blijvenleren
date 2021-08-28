@@ -15,5 +15,7 @@ namespace BL.Data
         }
 
         public DbSet<BL.Models.LearnResourceModel> LearnResourceModel { get; set; }
+
+        public DbSet<BL.Models.CommentModel> CommentModel { get; set; }
     }
 }
