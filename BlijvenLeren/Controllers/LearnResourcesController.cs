@@ -88,7 +88,6 @@ namespace BlijvenLeren.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Details", new { id = commentModel.LearnResourceId });
-            //return await Details(commentModel.LearnResourceId);  
         }
 
         // GET: LearnResources/Edit/5
