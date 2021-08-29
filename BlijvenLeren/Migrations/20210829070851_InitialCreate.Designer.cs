@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlijvenLeren.Migrations
 {
     [DbContext(typeof(BlijvenLerenContext))]
-    [Migration("20210828132618_InitialBlijvenLerenDbContext")]
-    partial class InitialBlijvenLerenDbContext
+    [Migration("20210829070851_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
