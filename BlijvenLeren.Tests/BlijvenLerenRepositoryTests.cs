@@ -8,15 +8,13 @@ using System.Linq;
 
 namespace BlijvenLeren.Tests
 {
-    public class Tests
+    public class BlijvenLerenRepositoryTests
     {
         private const string testCommentText = "TestCommentText";
         private const string testResourceText = "TestResourceText";
 
         BlijvenLerenContext blijvenLerenContext;
         BlijvenLerenRepository sut;
-
-        //public DbSet<LearnResource> learnResourceMockObject { get; set; } 
 
         [SetUp]
         public void Setup()
@@ -28,7 +26,7 @@ namespace BlijvenLeren.Tests
             blijvenLerenContext = new BlijvenLerenContext(options);
             blijvenLerenContext.Database.EnsureDeleted();
 
-            CreateLearningResourceContext(2);
+            CreateGivenLearnResourceMocks(2);
 
             sut = new BlijvenLerenRepository(blijvenLerenContext);
         }
@@ -113,28 +111,20 @@ namespace BlijvenLeren.Tests
             Assert.IsFalse(blijvenLerenContext.LearnResource.Any(r => r.LearnResourceId == id));
         }
 
-        private void CreateLearningResourceContext(int numberOfObjects)
-        {
-            var mockresources = CreateGivenLearnResourceMocks(numberOfObjects);
-
-            mockresources.ForEach(x => blijvenLerenContext.LearnResource.Add(x));
-            blijvenLerenContext.SaveChanges();
-        }
-
-        private List<LearnResource> CreateGivenLearnResourceMocks(int numberOfObjects)
+        private void CreateGivenLearnResourceMocks(int numberOfObjects)
         {           
-            var retval = new List<LearnResource>();
-
             for (int i = 1; i <= numberOfObjects; i++)
             {
-                retval.Add(new LearnResource
+                var resource = new LearnResource
                 {
                     Description = $"{testResourceText}{i}",
                     Comments = CreateGivenCommentMock(2)
-                });
+                };
+
+                blijvenLerenContext.LearnResource.Add(resource);
             }
 
-            return retval;
+            blijvenLerenContext.SaveChanges();
         }
 
         private List<Comment> CreateGivenCommentMock(int numberOfObjects)

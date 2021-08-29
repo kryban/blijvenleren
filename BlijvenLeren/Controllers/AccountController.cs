@@ -1,28 +1,19 @@
-﻿using BlijvenLeren.ViewModels;
+﻿using BlijvenLeren.Services;
+using BlijvenLeren.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BlijvenLeren.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        public IUserService _userService { get; set; }
 
-        public AccountController(UserManager<IdentityUser> userManager, 
-            SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager)
+        public AccountController(IUserService userService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _roleManager = roleManager;
+            _userService = userService;
         }
-
 
         public IActionResult Register()
         {
@@ -34,18 +25,10 @@ namespace BlijvenLeren.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser
-                {
-                    UserName = model.Email,
-                    Email = model.Email,
-                };
-
-                var result = await _userManager.CreateAsync(user, model.Password);
+                var result = await _userService.CreateUser(model, model.Password);
 
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-
                     return RedirectToAction("index", "Home");
                 }
 
@@ -66,13 +49,14 @@ namespace BlijvenLeren.Controllers
         {
             return View();
         }
+
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel user)
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(user.Email, user.Password, user.RememberMe, false);
+                var result = await _userService.Login(user);  
 
                 if (result.Succeeded)
                 {
@@ -80,14 +64,14 @@ namespace BlijvenLeren.Controllers
                 }
 
                 ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
-
             }
+
             return View(user);
         }
 
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
+            await _userService.Logout();
 
             return RedirectToAction("Login");
         }

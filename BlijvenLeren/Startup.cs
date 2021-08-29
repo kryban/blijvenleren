@@ -1,5 +1,6 @@
 ﻿using BlijvenLeren.Data;
 using BlijvenLeren.Repository;
+using BlijvenLeren.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -28,6 +29,7 @@ namespace BlijvenLeren
                     options.UseSqlServer(Configuration.GetConnectionString("BlijvenLerenContext")));
 
             services.AddScoped<IBlijvenLerenRepository, BlijvenLerenRepository>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BlijvenLerenContext>();
         }
