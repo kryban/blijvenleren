@@ -18,7 +18,7 @@ namespace BlijvenLeren.Repository
         }
 
         public async Task<List<LearnResource>> GetAllLearnResources()
-        {
+        {          
             return await _context.LearnResource.ToListAsync();
         }
 

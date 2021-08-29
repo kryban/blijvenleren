@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31613.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlijvenLeren", "BlijvenLeren\BlijvenLeren.csproj", "{8F4D4357-D10F-4E7A-85EF-94E438C328E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlijvenLeren", "BlijvenLeren\BlijvenLeren.csproj", "{8F4D4357-D10F-4E7A-85EF-94E438C328E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlijvenLeren.Tests", "BlijvenLeren.Tests\BlijvenLeren.Tests.csproj", "{C088CB3C-9B50-4CDA-8262-9405F9C2C521}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{8F4D4357-D10F-4E7A-85EF-94E438C328E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F4D4357-D10F-4E7A-85EF-94E438C328E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F4D4357-D10F-4E7A-85EF-94E438C328E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C088CB3C-9B50-4CDA-8262-9405F9C2C521}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C088CB3C-9B50-4CDA-8262-9405F9C2C521}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C088CB3C-9B50-4CDA-8262-9405F9C2C521}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C088CB3C-9B50-4CDA-8262-9405F9C2C521}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
