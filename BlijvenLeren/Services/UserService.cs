@@ -1,5 +1,7 @@
 ﻿using BlijvenLeren.ViewModels;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BlijvenLeren.Services
@@ -16,6 +18,8 @@ namespace BlijvenLeren.Services
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+
+            new List<string>("Extern,Intern".Split(',')).ForEach(s => CreateRole(s));
         }
 
         public async Task<IdentityResult> CreateUser(RegisterViewModel model, string password)
@@ -23,10 +27,12 @@ namespace BlijvenLeren.Services
             var user = new IdentityUser
             {
                 UserName = model.Email,
-                Email = model.Email,
+                Email = model.Email
             };
 
-            var result = await _userManager.CreateAsync(user, password);
+            await _userManager.CreateAsync(user, password);
+
+            var result = await _userManager.AddToRoleAsync(user, model.UserRole);
 
             if (result.Succeeded)
             {
@@ -39,6 +45,23 @@ namespace BlijvenLeren.Services
         public async Task<SignInResult> Login(LoginViewModel user)
         {
             return await _signInManager.PasswordSignInAsync(user.Email, user.Password, user.RememberMe, false);
+
+        }
+
+
+
+        private async Task<IQueryable<IdentityRole>> ReturnAllRoles()
+        {
+            return _roleManager.Roles;
+        }
+
+        private void CreateRole(string name)
+        {
+            var exist = _roleManager.RoleExistsAsync(name).Result;
+            if (!exist)
+            {
+                _roleManager.CreateAsync(new IdentityRole(name));
+            }
         }
 
         public async Task Logout()

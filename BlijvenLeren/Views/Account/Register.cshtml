@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "Register";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var availableRoles = new List<string>() { "Intern", "Extern" };
 }
 
 <h1>Register</h1>
@@ -28,6 +30,15 @@
                 <input asp-for="ConfirmPassword" class="form-control" />
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label asp-for="UserRole">Role</label>
+                <select asp-for="UserRole" asp-items="@new SelectList(availableRoles)" class="form-control">
+                    <option>select role...</option>
+                </select>
+                <span asp-validation-for="UserRole" class="text-danger"></span>
+            </div>
+
             <button type="submit" class="btn-primary">Register</button>
         </form>
 

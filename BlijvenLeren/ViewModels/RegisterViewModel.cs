@@ -19,5 +19,9 @@ namespace BlijvenLeren.ViewModels
         [Display(Name = "Confirm Password")]
         [Compare("Password", ErrorMessage = "Password and confirmation password not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [RegularExpression("Intern|Extern", ErrorMessage ="Please select a role.")]
+        public string UserRole{ get; set; }
     }
 }
