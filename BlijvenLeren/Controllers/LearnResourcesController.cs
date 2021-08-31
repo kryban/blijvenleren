@@ -82,7 +82,7 @@ namespace BlijvenLeren.Controllers
             return status;
         }
 
-        public async Task<IActionResult> AddComment([Bind("LearnResourceId, Status, CommentText, Username")] Comment newComment)
+        public async Task<IActionResult> AddComment([Bind("LearnResourceId, Status, CommentText")] Comment newComment)
         {
             await _repo.AddComment(newComment);
 
