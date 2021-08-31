@@ -49,7 +49,6 @@ namespace BlijvenLeren.Services
         }
 
 
-
         private async Task<IQueryable<IdentityRole>> ReturnAllRoles()
         {
             return _roleManager.Roles;
