@@ -53,7 +53,7 @@ namespace BlijvenLeren.Repository
         public async Task AddComment(Comment comment)
         {
             comment.CommentDate = DateTime.Now;
-            comment.Status = CommentStatus.Approved;
+            comment.Status = comment.Status;
 
             _context.Comment.Add(comment);
             await _context.SaveChangesAsync();
@@ -76,6 +76,24 @@ namespace BlijvenLeren.Repository
 
             _context.LearnResource.Remove(learnResource);
             await _context.SaveChangesAsync();
+        }
+
+        public IEnumerable<Comment> GetCommentsForReview()
+        {
+            var retval = new List<Comment>();
+
+            retval.AddRange(_context.Comment.Where(c => c.Status == CommentStatus.InReview));
+            
+            return retval;
+        }
+
+        public void ApproveComment(int id)
+        {
+            var comment = _context.Comment.Find(id);
+
+            comment.Status = CommentStatus.Approved;
+
+            _context.SaveChanges();
         }
     }
 }

@@ -42,17 +42,19 @@ namespace BlijvenLeren.Services
             return result;
         }
 
+        public async Task<IList<string>> GetUserRoles(IdentityUser user)
+        {
+            
+            var retval  = await _userManager.GetRolesAsync(user);
+            return retval;
+        }
+
         public async Task<SignInResult> Login(LoginViewModel user)
         {
             return await _signInManager.PasswordSignInAsync(user.Email, user.Password, user.RememberMe, false);
 
         }
 
-
-        private async Task<IQueryable<IdentityRole>> ReturnAllRoles()
-        {
-            return _roleManager.Roles;
-        }
 
         private void CreateRole(string name)
         {

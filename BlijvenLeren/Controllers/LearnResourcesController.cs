@@ -1,8 +1,12 @@
 ﻿using BlijvenLeren.Models;
 using BlijvenLeren.Repository;
+using BlijvenLeren.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BlijvenLeren.Controllers
@@ -11,10 +15,12 @@ namespace BlijvenLeren.Controllers
     public class LearnResourcesController : Controller
     {
         private readonly IBlijvenLerenRepository _repo;
+        private readonly IUserService _userService;
 
-        public LearnResourcesController(IBlijvenLerenRepository repo)
+        public LearnResourcesController(IBlijvenLerenRepository repo, IUserService userService)
         {
             _repo = repo;
+            _userService = userService;
         }
 
         public async Task<IActionResult> Index()
@@ -66,10 +72,17 @@ namespace BlijvenLeren.Controllers
 
         public IActionResult NewComment(int id)
         {
-            return View(new Comment() { LearnResourceId = id });
+            return View(new Comment() { LearnResourceId = id, Status = BepaalStatusOpBasisVanUserRol() });
         }
 
-        public async Task<IActionResult> AddComment([Bind("LearnResourceId, CommentText, Username")] Comment newComment)
+        private CommentStatus BepaalStatusOpBasisVanUserRol()
+        {
+            var status = User.IsInRole(BlijvenLerenRole.Intern) ? CommentStatus.Approved : CommentStatus.InReview;
+
+            return status;
+        }
+
+        public async Task<IActionResult> AddComment([Bind("LearnResourceId, Status, CommentText, Username")] Comment newComment)
         {
             await _repo.AddComment(newComment);
 

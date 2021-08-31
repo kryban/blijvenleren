@@ -35,7 +35,7 @@
 <div>
     <p><h6>Comments</h6></p>
 </div>
-@foreach (var comment in Model.Comments.OrderByDescending(c => c.CommentDate))
+@foreach (var comment in Model.Comments.Where(c => c.Status == CommentStatus.Approved).OrderByDescending(c => c.CommentDate))
 {
     <div>@comment.CommentText</div>
     <div><i><small>@comment.CommentDate</small> </i></div>

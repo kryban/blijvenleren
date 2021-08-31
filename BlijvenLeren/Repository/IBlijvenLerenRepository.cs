@@ -14,5 +14,7 @@ namespace BlijvenLeren.Repository
         Task UpdateLearnResource(LearnResource learnResource);
         bool LearnResourceExists(int id);
         Task DeleteLearnResource(int id);
+        IEnumerable<Comment> GetCommentsForReview();
+        void ApproveComment(int id);
     }
 }
