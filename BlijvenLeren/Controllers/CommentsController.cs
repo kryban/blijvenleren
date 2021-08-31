@@ -26,7 +26,7 @@ namespace BlijvenLeren.Controllers
         public ActionResult Edit(int id)
         {
             _repo.ApproveComment(id);
-            return View("Index");
+            return RedirectToAction("Index");
         }
 
         // POST: CommentsController/Edit/5
@@ -47,7 +47,8 @@ namespace BlijvenLeren.Controllers
         // GET: CommentsController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            _repo.DeleteComment(id);
+            return RedirectToAction("Index");
         }
 
         // POST: CommentsController/Delete/5

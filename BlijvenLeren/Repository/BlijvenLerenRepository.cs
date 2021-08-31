@@ -95,5 +95,13 @@ namespace BlijvenLeren.Repository
 
             _context.SaveChanges();
         }
+
+        public void DeleteComment(int id)
+        {
+            var comment = _context.Comment.Find(id);
+
+            _context.Comment.Remove(comment);
+            _context.SaveChanges();
+        }
     }
 }
